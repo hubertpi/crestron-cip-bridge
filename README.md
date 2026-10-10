@@ -1,5 +1,7 @@
 # Crestron CIP Bridge
 
+**AI authorship:** This integration was written by AI (OpenAI ChatGPT/Codex), with requirements, feedback, and hardware testing provided by the repository owner.
+
 Home Assistant custom integration for monitoring and controlling verified Crestron AV3 CIP points. The integration source is stored in `custom_components/crestron_cip_bridge`.
 
 ## Install with HACS
@@ -31,3 +33,4 @@ When HACS offers a new Crestron CIP Bridge version, download the update and rest
 - Removed the discovery, experimental-control, and known-object-naming options.
 - Removed individual display power switches and input selectors, including automatic cleanup of those entities on existing installations.
 - Lighting, scenes, global presentation buttons, existing generic entities, and diagnostics remain available.
+
