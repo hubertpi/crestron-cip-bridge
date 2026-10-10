@@ -1,3 +1,11 @@
+# Version 0.1.23: connection settings and simpler controls
+
+Configure → Connection settings now allows changing the AV3 address, proxy listen IP, all CIP/HTTP ports, connection mode, and HTTP forwarding. Saving reloads the integration with the new values. Existing lights and presentation buttons keep their entity IDs.
+
+Removed the Discover CIP points, Name known Object 61 lights, and Add experimental digital control configuration options. Previously configured generic points and saved light names remain supported. Record an iPad action remains available for diagnostics.
+
+Removed the four individual display power switches and four display input selectors. Existing entries automatically remove those eight entities from the registry on startup. Lighting, scene buttons, global presentation buttons, and the projector lamp-hours sensor remain available.
+
 # Version 0.1.22: dispatch entity updates on the Home Assistant event loop
 
 Crestron CIP feedback can arrive on a protocol worker thread. All update notifications are now scheduled through Home Assistant's thread-safe job helper before dispatching to entities. This prevents `async_write_ha_state` from running off the event loop for lights, sensors, and discovered CIP entities.
@@ -36,13 +44,13 @@ A separate custom integration domain (`crestron_cip_bridge`) for monitoring and 
 
 Copy `custom_components/crestron_cip_bridge` into Home Assistant's `custom_components` directory and restart Home Assistant. Add **Crestron CIP Bridge** from Devices & Services. The package includes `brand/icon.png` for Home Assistant versions that support local integration branding.
 
-## Discover points
+## Configure connection settings
 
-The integration records digital, analog, and serial values received in the AV3's CIP synchronization and feedback traffic. Open the integration's **Configure** menu and choose **Discover CIP points**, select a point, optionally send a test for a top-level digital/analog join, then assign a name and entity type. Newly configured entities are added after the options flow reloads the entry. The configured point's state follows later AV3 readback; commands do not invent state before feedback arrives.
+In Settings → Devices & services, open Crestron CIP Bridge → Configure → Connection settings. You can edit the AV3 IP address or hostname, AV3 CIP and HTTP ports, proxy listen IP address, proxy CIP and HTTP ports, connection mode, and HTTP forwarding. The form starts with your saved settings; saving automatically reloads the integration.
 
-The inventory covers points that the AV3 exposes through its CIP panel interface. It cannot enumerate hidden SIMPL program registers or values that the processor never sends. If no points appear, connect the iPad or allow the AV3's initial CIP synchronization to complete, then reopen discovery.
+The proxy listen IP must belong to Home Assistant; `0.0.0.0` listens on all interfaces. If you change a proxy port or listen address, update the iPad app to reach the new Home Assistant endpoint. Restart Home Assistant after installing an integration update through HACS.
 
-Top-level digital joins can be read as binary sensors or configured as switches/buttons. Top-level analog joins can be read as sensors or configured as number controls (raw range 0–65535). Serial and Smart Object values are currently read-only in generic discovery. Generic Smart Object writes are not implemented; the existing known Smart Object 61 lighting profile remains available in this separate build.
+Passive CIP inventory remains available in diagnostics. Existing generic entities and saved Object 61 names are preserved, but the configuration menu no longer offers discovery, experimental controls, or Object 61 naming.
 
 ## Connection modes
 
@@ -65,7 +73,3 @@ Discovery is passive: it observes joins during startup synchronization and subse
 After restarting HA, open the integration entry's three-dot menu and choose Download diagnostics. The JSON contains every currently observed join grouped by CIP/Smart Object, full serial strings, last-seen timestamps, configured entities, connection mode, and the known six-light Smart Object 61 mappings. No test commands or reconnects are sent during export.
 
 Allow the AV3 to synchronize first; connecting the iPad through the proxy can provide additional observations. Inventory is held in memory and starts fresh on reload/restart. The download reflects the last received values; it is not a new poll of the AV3. Serial strings and assigned names are deliberately included for identification, so review the file before sharing.
-
-## Object 61 naming preview (0.1.4)
-
-Configure → Name known Object 61 lights previews the six received labels from serial joins 11, 13, 15, 17, 19, 21 against the existing row mappings. Submit to apply the names. This reuses existing light unique IDs and creates no duplicates. User-set HA name overrides take precedence; entity IDs are preserved. Names are saved in options so they survive restarts. No equipment commands are sent. This is an explicit Object 61 profile, not a general rule for other Smart Objects. Coves is not enabled without verification.

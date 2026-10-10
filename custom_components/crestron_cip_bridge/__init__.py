@@ -4,6 +4,7 @@ import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN, PLATFORMS
 from .proxy import CrestronProxy
@@ -16,6 +17,16 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    registry = er.async_get(hass)
+    retired_ids = {
+        f"{entry.entry_id}_media_{kind}_{display}"
+        for kind in ("power", "input")
+        for display in ("projector", "sharp_touch", "sony_tv_left", "sony_tv_right")
+    }
+    for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+        if (entity.platform == DOMAIN and entity.domain in ("switch", "select")
+                and entity.unique_id in retired_ids):
+            registry.async_remove(entity.entity_id)
     proxy = CrestronProxy(hass, entry)
     try:
         await proxy.async_start()

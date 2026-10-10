@@ -10,6 +10,6 @@
   "requirements": [
     "pycrestron-cip==0.1.2"
   ],
-  "version": "0.1.22",
+  "version": "0.1.23",
   "issue_tracker": "https://github.com/hubertpi/crestron-cip-bridge/issues"
 }

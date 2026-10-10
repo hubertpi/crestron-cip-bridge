@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 DOMAIN = "crestron_cip_bridge"
-PLATFORMS = ["light", "sensor", "binary_sensor", "switch", "button", "number", "select"]
+PLATFORMS = ["light", "sensor", "binary_sensor", "switch", "button", "number"]
 
 CONF_AV3_HOST = "av3_host"
 CONF_AV3_CIP_PORT = "av3_cip_port"
@@ -58,32 +58,8 @@ SCENES = (
     {"key": "off", "wall_name": "Off", "ipad_name": "Off", "digital_join": 4019},
 )
 
-# Captured top-level CIP button joins. These are separate ON and OFF commands;
-# no AV3 feedback was present, so the HA entity state remains unknown.
-MEDIA_POWER_SWITCHES = (
-    {"key": "projector", "name": "Projector", "on_join": 703, "off_join": 704,
-     "on_pulse": 0.043, "off_pulse": 0.032},
-    {"key": "sharp_touch", "name": "Sharp Touch", "on_join": 708, "off_join": 709,
-     "on_pulse": 0.029, "off_pulse": 0.036},
-    {"key": "sony_tv_left", "name": "Sony TV Left", "on_join": 711, "off_join": 712,
-     "on_pulse": 0.034, "off_pulse": 0.034},
-    {"key": "sony_tv_right", "name": "Sony TV Right", "on_join": 714, "off_join": 715,
-     "on_pulse": 0.033, "off_pulse": 0.099},
-)
-
-# All four output Smart Objects were individually captured while selecting
-# the same four inputs. Each selection sends analog join 1 first, then pulses
-# the corresponding digital input join.
-MEDIA_INPUTS = (
-    {"key": "room_pc", "name": "Room PC", "analog_value": 3, "digital_join": 13},
-    {"key": "showcase_l", "name": "Showcase L", "analog_value": 4, "digital_join": 14},
-    {"key": "showcase_r", "name": "Showcase R", "analog_value": 5, "digital_join": 15},
-    {"key": "table_input", "name": "Table Input", "analog_value": 6, "digital_join": 16},
-)
-
-# Global presentation controls from Smart Object 20. These differ from the
-# individual display source buttons above: the AV3 interprets each as a
-# presentation action, including turning displays on when required.
+# Global presentation controls from Smart Object 20. The AV3 interprets each
+# as a presentation action, including turning displays on when required.
 PRESENTATION_INPUTS = (
     {"key": "room_pc", "name": "Present Room PC", "analog_value": 3, "digital_join": 4013},
     {"key": "showcase_l", "name": "Present Showcase L", "analog_value": 4, "digital_join": 4014},
@@ -93,10 +69,3 @@ PRESENTATION_INPUTS = (
 
 PRESENTATION_OFF_JOIN = 102
 PRESENTATION_OFF_PULSE = 0.32
-
-MEDIA_INPUT_DISPLAYS = (
-    {"key": "projector", "name": "Projector", "smart_object": 75},
-    {"key": "sharp_touch", "name": "Sharp Touch", "smart_object": 76},
-    {"key": "sony_tv_left", "name": "Sony TV Left", "smart_object": 77},
-    {"key": "sony_tv_right", "name": "Sony TV Right", "smart_object": 78},
-)

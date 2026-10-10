@@ -59,7 +59,7 @@ class CrestronProxy:
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         self.hass = hass
         self.entry = entry
-        self.config = entry.data
+        self.config = {**entry.data, **entry.options}
         self.mode = entry.options.get(
             CONF_CONNECTION_MODE,
             self.config.get(CONF_CONNECTION_MODE, MODE_PROXY),
@@ -634,53 +634,6 @@ class CrestronProxy:
             # Captures placed the Object 20 button press about 11 ms after
             # setting analog join 1; observed presses lasted 75–170 ms.
             await asyncio.sleep(0.011)
-            send(press)
-            if panel is None:
-                await writer.drain()
-            try:
-                await asyncio.sleep(0.10)
-            finally:
-                send(release)
-                if panel is None:
-                    await writer.drain()
-
-    async def async_select_media_input(
-        self, smart_object: int, analog_value: int, digital_join: int
-    ) -> None:
-        """Replay a captured display source selection for one output object."""
-        if not 75 <= int(smart_object) <= 78:
-            raise ValueError("Media output Smart Object must be between 75 and 78")
-        if not 3 <= int(analog_value) <= 6 or not 13 <= int(digital_join) <= 16:
-            raise ValueError("Unsupported captured media input selection")
-
-        panel = self._direct_panel if self.mode in (MODE_STANDALONE, MODE_AUTO) else None
-        if panel is not None and not panel.available:
-            panel = None
-        writer = self._upstream_writer
-        if panel is None and (not writer or writer.is_closing()):
-            raise RuntimeError("Crestron CIP session is not connected")
-
-        def send(frame: bytes) -> None:
-            if panel is not None:
-                panel._write(frame)
-            else:
-                writer.write(frame)
-            self.capture.record("ha_to_av3", self.display_mode, decode_cip_updates(frame), frame)
-
-        analog = smart_object_frame(cip_analog_frame(1, int(analog_value)), int(smart_object))
-        press = smart_object_frame(
-            cip_digital_frame(int(digital_join), True, button=True), int(smart_object)
-        )
-        release = smart_object_frame(
-            cip_digital_frame(int(digital_join), False, button=True), int(smart_object)
-        )
-        async with self._write_lock:
-            send(analog)
-            if panel is None:
-                await writer.drain()
-            # Captures place the digital press about 20–30 ms after the analog
-            # source value; observed presses lasted roughly 70–135 ms.
-            await asyncio.sleep(0.025)
             send(press)
             if panel is None:
                 await writer.drain()
