@@ -20,3 +20,10 @@ This is a community integration and is not affiliated with or endorsed by Crestr
 ## Updates
 
 When HACS offers a new Crestron CIP Bridge version, download the update and restart Home Assistant. Future revisions will update this repository and publish a matching GitHub release.
+
+## Version 0.1.23
+
+- Configure → Connection settings lets you edit IP addresses, all CIP/HTTP ports, connection mode, and HTTP forwarding. Saving automatically reloads the connection.
+- Removed the discovery, experimental-control, and known-object-naming options.
+- Removed individual display power switches and input selectors, including automatic cleanup of those entities on existing installations.
+- Lighting, scenes, global presentation buttons, existing generic entities, and diagnostics remain available.
