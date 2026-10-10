@@ -1,0 +1,15 @@
+{
+  "domain": "crestron_cip_bridge",
+  "name": "Crestron CIP Bridge",
+  "codeowners": [
+    "@hubertpi"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/hubertpi/crestron-cip-bridge",
+  "iot_class": "local_push",
+  "requirements": [
+    "pycrestron-cip==0.1.2"
+  ],
+  "version": "0.1.22",
+  "issue_tracker": "https://github.com/hubertpi/crestron-cip-bridge/issues"
+}
