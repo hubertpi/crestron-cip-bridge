@@ -1,5 +1,7 @@
 # Version 0.1.24: fix connection form rendering
 
+**AI authorship:** This integration was written by AI (OpenAI ChatGPT/Codex), with requirements, feedback, and hardware testing provided by the repository owner.
+
 Fixed the blank Error dialog when opening Connection settings or initial setup. Address fields now use a Home Assistant compatible text validator, while retaining whitespace cleanup and nonempty address validation.
 
 # Version 0.1.23: connection settings and simpler controls
@@ -77,3 +79,4 @@ Discovery is passive: it observes joins during startup synchronization and subse
 After restarting HA, open the integration entry's three-dot menu and choose Download diagnostics. The JSON contains every currently observed join grouped by CIP/Smart Object, full serial strings, last-seen timestamps, configured entities, connection mode, and the known six-light Smart Object 61 mappings. No test commands or reconnects are sent during export.
 
 Allow the AV3 to synchronize first; connecting the iPad through the proxy can provide additional observations. Inventory is held in memory and starts fresh on reload/restart. The download reflects the last received values; it is not a new poll of the AV3. Serial strings and assigned names are deliberately included for identification, so review the file before sharing.
+
