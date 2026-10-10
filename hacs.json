@@ -1,6 +1,4 @@
 {
   "name": "Crestron CIP Bridge",
-  "zip_release": true,
-  "filename": "Crestron_CIP_Bridge.zip",
   "render_readme": true
 }
