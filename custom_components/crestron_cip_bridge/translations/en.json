@@ -1,0 +1,101 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Crestron CIP Bridge",
+        "description": "Auto starts Home Assistant as CIP IP ID 03, then hands the session to the iPad when it connects through the proxy. Proxy mode waits for the iPad, and Standalone mode connects Home Assistant directly.",
+        "data": {
+          "av3_host": "AV3 address",
+          "av3_cip_port": "AV3 CIP port",
+          "connection_mode": "CIP connection mode",
+          "listen_address": "Proxy listen address",
+          "cip_listen_port": "Proxy CIP port",
+          "http_proxy": "Forward HTTP project traffic",
+          "http_listen_port": "Proxy HTTP port",
+          "av3_http_port": "AV3 HTTP port"
+        },
+        "data_description": {
+          "connection_mode": "Auto is recommended when both HA and the iPad should work. It switches between a direct HA session and the iPad proxy session."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This AV3 endpoint is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Crestron CIP Bridge Options",
+        "menu_options": {
+          "connection": "Connection mode",
+          "discover": "Discover CIP points",
+          "object61": "Name known Object 61 lights",
+          "capture": "Record an iPad action",
+          "digital_control": "Add experimental digital control"
+        }
+      },
+      "connection": {
+        "title": "Connection mode",
+        "data": {
+          "connection_mode": "CIP connection mode"
+        }
+      },
+      "discover": {
+        "title": "Discovered CIP points",
+        "description": "Choose a point received from the AV3 during synchronization or live feedback.",
+        "data": {
+          "point": "Observed point"
+        }
+      },
+      "test": {
+        "title": "Test point",
+        "description": "Sending a test can operate connected equipment. Digital tests send a momentary button press; analog tests send the value entered below. Leave Send test command unchecked to continue without sending.",
+        "data": {
+          "send_test": "Send test command",
+          "test_value": "Analog test value (0\u201365535)"
+        }
+      },
+      "name": {
+        "title": "Create or update entity",
+        "description": "Selected point: {point}\n\n{test_note}",
+        "data": {
+          "name": "Entity name",
+          "entity_type": "Entity type"
+        }
+      },
+      "object61": {
+        "title": "Object 61 light naming preview",
+        "description": "These names were received from the AV3 and matched to configured light rows:\n\n{preview}\n\nSubmit to save names. Entity IDs and user-assigned name overrides are preserved. No commands are sent. Coves uses an inferred seventh-row mapping that still needs physical verification."
+      },
+      "capture": {
+        "title": "Record an iPad action",
+        "description": "Status: {status}; events: {count}; connection: {mode}. Start, perform ONE action on the iPad through this proxy, then reopen this menu and Stop. Download diagnostics before reloading HA. Recording stops after 5 minutes or 2000 events. Starting replaces the previous recording. Includes display text; sends no commands.",
+        "data": {
+          "action": "Recording action",
+          "label": "Describe the action you will perform"
+        }
+      },
+      "digital_control": {
+        "title": "Add experimental digital control",
+        "description": "Enter a command join to test. Object 0 means top-level CIP. A button sends a 150 ms press/release; a switch holds the digital value until turned off. Scene and source selections usually need a button. Saving sends no commands. Serial name numbers do NOT establish digital command numbers. Switch state shows received digital feedback only and does not prove equipment power.\n\nObserved names for reference:\n{labels}",
+        "data": {
+          "name": "Entity name",
+          "smart_object": "Smart Object ID (0 = top-level CIP)",
+          "join": "Digital command join (one-based)",
+          "entity_type": "Control type"
+        }
+      }
+    },
+    "error": {
+      "no_points": "No points observed yet. Connect the iPad or wait for the AV3's initial sync, then open this menu again.",
+      "test_failed": "The point test could not be sent. Check the CIP connection and try again."
+    },
+    "abort": {
+      "object61_incomplete": "All six Object 61 light labels have not been received yet. Wait for synchronization, then try again.",
+      "capture_unavailable": "Integration is not running.",
+      "capture_started": "Recording started. Perform one iPad action through the proxy, then reopen Configure \u2192 Record an iPad action to stop. Download diagnostics before reloading.",
+      "capture_stopped": "Recording stopped. Download diagnostics from the integration entry menu. The recording stays in memory until reload or a new recording."
+    }
+  }
+}
