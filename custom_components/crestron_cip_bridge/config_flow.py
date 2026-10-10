@@ -27,12 +27,12 @@ def connection_schema(settings):
     """Use the same connection fields for initial setup and later changes."""
     return vol.Schema(
         {
-            vol.Required(CONF_AV3_HOST, default=settings.get(CONF_AV3_HOST, DEFAULT_AV3_HOST)): vol.All(str, str.strip, vol.Length(min=1)),
+            vol.Required(CONF_AV3_HOST, default=settings.get(CONF_AV3_HOST, DEFAULT_AV3_HOST)): vol.All(str, vol.Strip, vol.Length(min=1)),
             vol.Required(CONF_AV3_CIP_PORT, default=settings.get(CONF_AV3_CIP_PORT, DEFAULT_CIP_PORT)): vol.All(int, vol.Range(min=1, max=65535)),
             vol.Required(CONF_CONNECTION_MODE, default=settings.get(CONF_CONNECTION_MODE, MODE_AUTO)): vol.In(
                 {MODE_AUTO: "Auto", MODE_PROXY: "Proxy", MODE_STANDALONE: "Standalone"}
             ),
-            vol.Required(CONF_LISTEN_ADDRESS, default=settings.get(CONF_LISTEN_ADDRESS, DEFAULT_LISTEN_ADDRESS)): vol.All(str, str.strip, vol.Length(min=1)),
+            vol.Required(CONF_LISTEN_ADDRESS, default=settings.get(CONF_LISTEN_ADDRESS, DEFAULT_LISTEN_ADDRESS)): vol.All(str, vol.Strip, vol.Length(min=1)),
             vol.Required(CONF_CIP_LISTEN_PORT, default=settings.get(CONF_CIP_LISTEN_PORT, DEFAULT_CIP_PORT)): vol.All(int, vol.Range(min=1, max=65535)),
             vol.Required(CONF_HTTP_PROXY, default=settings.get(CONF_HTTP_PROXY, True)): bool,
             vol.Required(CONF_HTTP_LISTEN_PORT, default=settings.get(CONF_HTTP_LISTEN_PORT, DEFAULT_HTTP_LISTEN_PORT)): vol.All(int, vol.Range(min=1, max=65535)),

@@ -1,3 +1,7 @@
+# Version 0.1.24: fix connection form rendering
+
+Fixed the blank Error dialog when opening Connection settings or initial setup. Address fields now use a Home Assistant compatible text validator, while retaining whitespace cleanup and nonempty address validation.
+
 # Version 0.1.23: connection settings and simpler controls
 
 Configure → Connection settings now allows changing the AV3 address, proxy listen IP, all CIP/HTTP ports, connection mode, and HTTP forwarding. Saving reloads the integration with the new values. Existing lights and presentation buttons keep their entity IDs.
