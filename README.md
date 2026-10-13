@@ -27,6 +27,12 @@ When HACS offers a new Crestron CIP Bridge version, download the update and rest
 
 - Fixed the blank Error dialog when opening Connection settings or initial setup. Address fields now use a validator that Home Assistant can serialize for its forms.
 
+## Version 0.1.25
+
+- Added the read-only Active lighting scene sensor using AV3 Smart Object 65 feedback joins 4012, 4014, 4016, 4018, and 4020.
+- The sensor preserves the last confirmed scene during false-before-true transitions, stays unknown without valid feedback, and clears its value when the AV3 connection drops.
+- Diagnostics now report the manifest version dynamically. Standalone feedback and reconnect synchronization have not been physically tested.
+
 ## Version 0.1.23
 
 - Configure → Connection settings lets you edit IP addresses, all CIP/HTTP ports, connection mode, and HTTP forwarding. Saving automatically reloads the connection.

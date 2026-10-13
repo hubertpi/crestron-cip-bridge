@@ -5,6 +5,7 @@ from collections import Counter
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import datetime, timezone
+from homeassistant.loader import async_get_integration
 
 from .const import DOMAIN, LIGHTS
 from .profiles import object61_candidates
@@ -33,9 +34,10 @@ async def async_get_config_entry_diagnostics(hass, entry) -> dict:
         {key: deepcopy(point[key]) for key in (*_POINT_FIELDS, "name", "entity_type") if key in point}
         for point in entry.options.get("configured_points", [])
     ]
+    integration = await async_get_integration(hass, DOMAIN)
     return {
         "diagnostics_schema_version": 1,
-        "integration_version": "0.1.22",
+        "integration_version": integration.manifest.get("version"),
         "exported_at": datetime.now(timezone.utc).isoformat(),
         "runtime_available": proxy is not None,
         "connection": {

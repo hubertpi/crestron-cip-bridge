@@ -1,3 +1,9 @@
+# Version 0.1.25: add active lighting scene feedback
+
+Adds a read-only **Active lighting scene** sensor from AV3 Smart Object 65 persistent digital feedback: All on (4012), High (4014), Medium (4016), Low (4018), and Off (4020). The sensor follows actual AV3 feedback in proxy and standalone modes. It holds the last confirmed scene while the old join goes false and waits for the new scene's true feedback; it remains unknown until a valid true signal arrives and clears on disconnect. The supplied recording verifies proxy-idle feedback only; standalone feedback and reconnect synchronization have not been physically tested.
+
+Diagnostics now report the installed manifest version instead of a hardcoded version string.
+
 # Version 0.1.24: fix connection form rendering
 
 **AI authorship:** This integration was written by AI (OpenAI ChatGPT/Codex), with requirements, feedback, and hardware testing provided by the repository owner.

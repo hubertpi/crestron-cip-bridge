@@ -42,6 +42,7 @@ from .protocol import (
 )
 from .capture import ActionCapture
 from .discovery import decode_cip_updates, normalize_join_type, normalize_update, point_id as make_point_id
+from .lighting_scene import ActiveLightingScene
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -65,6 +66,7 @@ class CrestronProxy:
             self.config.get(CONF_CONNECTION_MODE, MODE_PROXY),
         )
         self.states = {light["key"]: LightState() for light in LIGHTS}
+        self.active_lighting_scene = ActiveLightingScene()
         self.discovered_points: dict[str, dict] = {}
         self.capture = ActionCapture()
         self._servers: list[asyncio.AbstractServer] = []
@@ -223,8 +225,11 @@ class CrestronProxy:
         self._dispatch_all()
 
     def _set_connected(self, connected: bool) -> None:
-        if self.connected != connected:
-            self.connected = connected
+        changed = self.connected != connected
+        self.connected = connected
+        if not connected and self.active_lighting_scene.reset():
+            changed = True
+        if changed:
             self._dispatch_all()
 
     def _handle_direct_join(self, update) -> None:
@@ -244,6 +249,7 @@ class CrestronProxy:
         if record["id"] not in self.discovered_points and len(self.discovered_points) >= 3000:
             return
         self.discovered_points[record["id"]] = record
+        self.active_lighting_scene.apply(update)
         self._dispatch_all()
 
     def _get_command_point(self, point_id):
@@ -368,7 +374,7 @@ class CrestronProxy:
         self._upstream_reader = None
         self._upstream_writer = None
         self._downstream_writer = None
-        self.connected = False
+        self._set_connected(False)
         for writer in writers:
             if writer and not writer.is_closing():
                 writer.close()
@@ -406,7 +412,7 @@ class CrestronProxy:
                 self._upstream_writer = upstream_writer
                 self._downstream_writer = writer
                 self._client_task = asyncio.current_task()
-                self.connected = True
+                self._set_connected(True)
                 self._upstream_pump_task = asyncio.create_task(
                     self._pump_av3_to_client(upstream_reader, upstream_writer)
                 )
@@ -485,7 +491,7 @@ class CrestronProxy:
             _LOGGER.debug("AV3 CIP stream ended: %s", err)
         finally:
             if self._upstream_writer is upstream_writer:
-                self.connected = False
+                self._set_connected(False)
                 self._upstream_reader = None
                 self._upstream_writer = None
                 downstream = self._downstream_writer
@@ -519,7 +525,7 @@ class CrestronProxy:
             if inspect:
                 self._upstream_writer = upstream_writer
                 self._downstream_writer = client_writer
-                self.connected = True
+                self._set_connected(True)
                 self._dispatch_all()
             tasks = [
                 asyncio.create_task(
@@ -539,7 +545,7 @@ class CrestronProxy:
             raise
         finally:
             if inspect:
-                self.connected = False
+                self._set_connected(False)
                 self._upstream_writer = None
                 self._downstream_writer = None
                 self._dispatch_all()
